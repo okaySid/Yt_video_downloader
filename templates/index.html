@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>YouTube Downloader</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #loadingGif {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+        }
+        #loadingGif img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px; /* Set the desired width */
+            height: 200px; /* Set the desired height */
+            border-radius: 10px;
+        }
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Hide scrollbars */
+        }
+        .bg-video {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+        }
+        .content {
+            position: relative;
+            z-index: 1;
+            color: white; /* Ensure the text is readable against the video */
+            padding: 20px;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.7); /* Semi-transparent background for better readability */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Soft shadow */
+            max-width: 600px; /* Set a maximum width */
+            margin: auto; /* Center the container */
+        }
+        .container h1 {
+            color: #ffffff; /* Yellow color for the heading */
+            
+        
+        }
+        .btn-primary {
+            background-color: #4CAF50; /* Green */
+            border-color: #4CAF50; /* Green */
+        }
+        .btn-primary:hover {
+            background-color: #45a049; /* Darker green on hover */
+            border-color: #45a049; /* Darker green on hover */
+        }
+        .form-control {
+            background-color: #f2f2f2; /* Light gray input background */
+        }
+    </style>
+</head>
+<body>
+    <video autoplay muted loop class="bg-video" id="bgVideo">
+        <source src="../static/background1.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    
+    <div class="content">
+        <div class="container mt-5">
+            <h1 class="mb-4"> YouTube Video Downloader</h1>
+            
+            <form id="downloadForm" class="mb-4">
+                <div class="form-group">
+                    <input type="text" name="url" class="form-control" placeholder="Enter YouTube URL" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quality">Select Quality:</label>
+                    <select name="quality" id="quality" class="form-control">
+                        <option value="best">Best</option>
+                        <option value="worst">Worst</option>
+                        <option value="bestvideo[height<=480]">480p</option>
+                        <option value="bestvideo[height<=720]">720p</option>
+                        <option value="bestvideo[height<=1080]">1080p</option>
+                        <option value="bestvideo[height<=1440]">1440p</option>
+                        <option value="bestvideo[height<=2160]">2160p (4K)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="start_time">Start Time (HH:MM:SS):</label>
+                    <input type="text" id="start_time" name="start_time" class="form-control" placeholder="Optional">
+                </div>
+                
+                <div class="form-group">
+                    <label for="end_time">End Time (HH:MM:SS):</label>
+                    <input type="text" id="end_time" name="end_time" class="form-control" placeholder="Optional">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Download</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="loadingGif">
+        <img src="" alt="Loading...">
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Array of loading gifs
+        var loadingGifs = [
+            '../static/giphy.gif',
+            '../static/giphy1.gif',
+            '../static/giphy2.gif',
+            '../static/giphy3.gif',
+            '../static/giphy4.gif',
+            '../static/giphy5.gif',
+            '../static/giphy6.gif',
+            '../static/giphy7.gif',
+        ];
+
+        $(document).ready(function() {
+    $('#downloadForm').on('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting the traditional way
+        
+        // Randomly select a loading gif
+        var randomIndex = Math.floor(Math.random() * loadingGifs.length);
+        var selectedGif = loadingGifs[randomIndex];
+        
+        // Update the loading gif
+        $('#loadingGif img').attr('src', selectedGif);
+        $('#loadingGif').show(); // Show the loading gif
+        
+        $.ajax({
+            url: '/download',
+            type: 'POST',
+            data: $(this).serialize(),
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function(data) {
+                $('#loadingGif').hide(); // Hide the loading gif on success
+
+                var a = document.createElement('a');
+                var url = window.URL.createObjectURL(data);
+                a.href = url;
+                a.download = 'video.mp4'; // Set the download filename
+                document.body.append(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            },
+            error: function() {
+                $('#loadingGif').hide(); // Hide the loading gif on error
+                alert('An error occurred while downloading the video.');
+            }
+        });
+    });
+});
+
+    </script>
+</body>
+</html>
