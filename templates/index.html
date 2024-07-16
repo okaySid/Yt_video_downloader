@@ -23,14 +23,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 200px; /* Set the desired width */
-            height: 200px; /* Set the desired height */
+            width: 200px; 
+            height: 200px; 
             border-radius: 10px;
         }
         body, html {
             height: 100%;
             margin: 0;
-            overflow: hidden; /* Hide scrollbars */
+            overflow: hidden; 
         }
         .bg-video {
             position: absolute;
@@ -43,38 +43,34 @@
         .content {
             position: relative;
             z-index: 1;
-            color: white; /* Ensure the text is readable against the video */
+            color: white; 
             padding: 20px;
         }
         .container {
-            background: rgba(0, 0, 0, 0.7); /* Semi-transparent background for better readability */
+            background: rgba(0, 0, 0, 0.7); 
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Soft shadow */
-            max-width: 600px; /* Set a maximum width */
-            margin: auto; /* Center the container */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); 
+            max-width: 600px; 
+            margin: auto; 
         }
-        .container h1 {
-            color: #ffffff; /* Yellow color for the heading */
-            
         
-        }
         .btn-primary {
-            background-color: #4CAF50; /* Green */
-            border-color: #4CAF50; /* Green */
+            background-color: #4CAF50; 
+            border-color: #4CAF50; 
         }
         .btn-primary:hover {
-            background-color: #45a049; /* Darker green on hover */
-            border-color: #45a049; /* Darker green on hover */
+            background-color: #45a049; 
+            border-color: #45a049; 
         }
         .form-control {
-            background-color: #f2f2f2; /* Light gray input background */
+            background-color: #f2f2f2; 
         }
     </style>
 </head>
 <body>
     <video autoplay muted loop class="bg-video" id="bgVideo">
-        <source src="../static/background1.mp4" type="video/mp4">
+        <source src="../static/background.mp4" type="video/mp4">
         Your browser does not support HTML5 video.
     </video>
     
@@ -90,8 +86,6 @@
                 <div class="form-group">
                     <label for="quality">Select Quality:</label>
                     <select name="quality" id="quality" class="form-control">
-                        <option value="best">Best</option>
-                        <option value="worst">Worst</option>
                         <option value="bestvideo[height<=480]">480p</option>
                         <option value="bestvideo[height<=720]">720p</option>
                         <option value="bestvideo[height<=1080]">1080p</option>
@@ -119,12 +113,12 @@
         <img src="" alt="Loading...">
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
+   
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Array of loading gifs
+        
         var loadingGifs = [
             '../static/giphy.gif',
             '../static/giphy1.gif',
@@ -137,16 +131,16 @@
         ];
 
         $(document).ready(function() {
-    $('#downloadForm').on('submit', function(event) {
-        event.preventDefault(); // Prevent the form from submitting the traditional way
+        $('#downloadForm').on('submit', function(event) {
+        event.preventDefault(); 
         
         // Randomly select a loading gif
         var randomIndex = Math.floor(Math.random() * loadingGifs.length);
         var selectedGif = loadingGifs[randomIndex];
         
-        // Update the loading gif
+        
         $('#loadingGif img').attr('src', selectedGif);
-        $('#loadingGif').show(); // Show the loading gif
+        $('#loadingGif').show(); 
         
         $.ajax({
             url: '/download',
@@ -156,19 +150,19 @@
                 responseType: 'blob'
             },
             success: function(data) {
-                $('#loadingGif').hide(); // Hide the loading gif on success
+                $('#loadingGif').hide(); 
 
                 var a = document.createElement('a');
                 var url = window.URL.createObjectURL(data);
                 a.href = url;
-                a.download = 'video.mp4'; // Set the download filename
+                a.download = 'video.mp4'; 
                 document.body.append(a);
                 a.click();
                 a.remove();
                 window.URL.revokeObjectURL(url);
             },
             error: function() {
-                $('#loadingGif').hide(); // Hide the loading gif on error
+                $('#loadingGif').hide(); 
                 alert('An error occurred while downloading the video.');
             }
         });

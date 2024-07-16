@@ -43,7 +43,7 @@ def download_video():
                 video_ext = video_info['ext']
                 original_file = f"downloads/{video_title}.{video_ext}"
 
-                # Ensure file exists in the downloads directory
+                
                 if not os.path.isfile(original_file):
                     print(f"File not found: {original_file}")
                     abort(404, description="File not found")
@@ -55,7 +55,7 @@ def download_video():
                     file_path = original_file
 
                 print(f"Sending file: {file_path}")
-                # Schedule deletion after 30 seconds
+                
                 schedule_deletion(file_path , original_file)
                 return send_file(file_path, as_attachment=True)
 
@@ -64,10 +64,10 @@ def download_video():
         abort(500, description="An error occurred while downloading the video")
 
 def trim_video(input_file, start_time, end_time):
-    # Generate output file name with the original extension
+    
     output_file = os.path.splitext(input_file)[0] + "_trimmed" + os.path.splitext(input_file)[1]
 
-    # Run ffmpeg to trim the video
+    
     cmd = [
         'ffmpeg', '-i', input_file,
         '-ss', start_time, '-to', end_time,
@@ -85,7 +85,7 @@ def trim_video(input_file, start_time, end_time):
 
 def schedule_deletion(file_path , original_file):
     def delete_file(file_path):
-        time.sleep(30)  # Wait for 30 seconds
+        time.sleep(30)  
         try:
             if os.path.isfile(file_path):
                 os.remove(file_path)
